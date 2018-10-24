@@ -1,5 +1,6 @@
 import "./app.scss";
 import "es6-shim";
+import "./styles/global.scss";
 
 import Vue from "vue";
 import App from "./App.vue";

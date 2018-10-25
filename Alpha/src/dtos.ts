@@ -15,28 +15,26 @@ BaseUrl: http://localhost:5000
 //DefaultImports: 
 */
 
-
-export interface IReturn<T>
-{
-    createResponse(): T;
+export interface IReturn<T> {
+  createResponse(): T;
 }
 
-export interface IReturnVoid
-{
-    createResponse(): void;
+export interface IReturnVoid {
+  createResponse(): void;
 }
 
-export class HelloResponse
-{
-    public result: string;
+export class HelloResponse {
+  public result: string;
 }
 
 // @Route("/hello")
 // @Route("/hello/{Name}")
-export class Hello implements IReturn<HelloResponse>
-{
-    public name: string;
-    public createResponse() { return new HelloResponse(); }
-    public getTypeName() { return 'Hello'; }
+export class Hello implements IReturn<HelloResponse> {
+  public name: string;
+  public createResponse() {
+    return new HelloResponse();
+  }
+  public getTypeName() {
+    return 'Hello';
+  }
 }
-

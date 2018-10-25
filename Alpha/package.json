@@ -17,6 +17,7 @@
   "dependencies": {
     "@servicestack/client": "^1.0.14",
     "es6-shim": "^0.35.3",
+    "prettier-eslint": "^8.8.2",
     "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^7.0.0",
@@ -36,6 +37,7 @@
     "sass-loader": "^7.0.1",
     "style-resources-loader": "^1.2.1",
     "ts-jest": "^23.0.0",
+    "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.0.0",
     "vue-template-compiler": "^2.5.16"
   },

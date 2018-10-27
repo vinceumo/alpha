@@ -8,6 +8,7 @@ using Funq;
 using ServiceStack;
 using ServiceStack.Configuration;
 using Alpha.ServiceInterface;
+using signalrBoard;
 
 namespace Alpha
 {
@@ -39,7 +40,7 @@ namespace Alpha
       app.UseSignalR(routes =>
       {
         routes.MapHub<BoardHub>("/boardHub");
-      })
+      });
     }
   }
 

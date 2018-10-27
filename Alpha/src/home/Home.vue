@@ -32,6 +32,10 @@ import { client } from '../shared';
 import { Hello } from '../dtos';
 import * as signalR from '@aspnet/signalr';
 
+const connection: any = new signalR.HubConnectionBuilder()
+.withUrl('../boardHub')
+.build();
+
 @Component
 export default class HomeComponent extends Vue {
     @Prop()
@@ -40,8 +44,7 @@ export default class HomeComponent extends Vue {
     public result: string = '';
     public userName: string = '';
     public userMessage: string = '';
-    public connection: any = new signalR.HubConnectionBuilder().withUrl('../boardHub').build();
-
+    public cards: object = {};
 
     public activated() {
         this.nameChanged(this.name);
@@ -65,9 +68,13 @@ export default class HomeComponent extends Vue {
 
     public submitCard() {
         if(this.userName && this.userMessage) {
-            this.connection.invoke('SendMessage', this.userName, this.userMessage).catch(err => console.error(err.toSting()));
+            connection.invoke('SendMessage', this.userName, this.userMessage).catch((err: any) => console.error(err.toSting()));
         }
     }
+
+    // connection.on('ReceiveMessage', (user, message) => {
+    //     const rec_msg = user + ': ' + message;
+    // });
 }
 </script>
 

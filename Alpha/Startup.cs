@@ -11,46 +11,52 @@ using Alpha.ServiceInterface;
 
 namespace Alpha
 {
-    public class Startup
+  public class Startup
+  {
+    public IConfiguration Configuration { get; }
+    public Startup(IConfiguration configuration) => Configuration = configuration;
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public void ConfigureServices(IServiceCollection services)
     {
-        public IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration) => Configuration = configuration;
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
-        {
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseServiceStack(new AppHost
-            {
-                AppSettings = new NetCoreAppSettings(Configuration)
-            });
-        }
+      services.AddSignalR();
     }
 
-    public class AppHost : AppHostBase
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-        public AppHost() : base("Alpha", typeof(MyServices).Assembly) { }
+      if (env.IsDevelopment())
+      {
+        app.UseDeveloperExceptionPage();
+      }
 
-        // Configure your AppHost with the necessary configuration and dependencies your App needs
-        public override void Configure(Container container)
-        {
-            Plugins.Add(new TemplatePagesFeature()); // enable server-side rendering, see: http://templates.servicestack.net
+      app.UseServiceStack(new AppHost
+      {
+        AppSettings = new NetCoreAppSettings(Configuration)
+      });
 
-            SetConfig(new HostConfig
-            {
-                AddRedirectParamsToQueryString = true,
-                DebugMode = AppSettings.Get(nameof(HostConfig.DebugMode), false)
-            });
-        }
+      app.UseSignalR(routes =>
+      {
+        routes.MapHub<BoardHub>("/boardHub");
+      })
     }
+  }
+
+  public class AppHost : AppHostBase
+  {
+    public AppHost() : base("Alpha", typeof(MyServices).Assembly) { }
+
+    // Configure your AppHost with the necessary configuration and dependencies your App needs
+    public override void Configure(Container container)
+    {
+      Plugins.Add(new TemplatePagesFeature()); // enable server-side rendering, see: http://templates.servicestack.net
+
+      SetConfig(new HostConfig
+      {
+        AddRedirectParamsToQueryString = true,
+        DebugMode = AppSettings.Get(nameof(HostConfig.DebugMode), false)
+      });
+    }
+  }
 }

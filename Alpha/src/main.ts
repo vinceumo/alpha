@@ -1,5 +1,6 @@
 import './app.scss';
 import 'es6-shim';
+import '@aspnet/signalr';
 import './styles/global.scss';
 
 import Vue from 'vue';

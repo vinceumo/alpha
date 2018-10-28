@@ -1,5 +1,6 @@
 ﻿<template>
     <div class="form-group">
+        <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
         <form>
             <div>
                 <label for="userName">Your Name</label>
@@ -30,11 +31,17 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
-import { client } from '../shared';
-import { Hello } from '../dtos';
+import { client } from '@/shared';
+import { Hello } from '@/dtos';
 import * as signalR from '@aspnet/signalr';
 
-@Component
+import HelloWorld from '@/components/HelloWorld.vue';
+
+@Component({
+  components: {
+    HelloWorld,
+  },
+})
 export default class HomeComponent extends Vue {
     public userName: string = '';
     public userMessage: string = '';

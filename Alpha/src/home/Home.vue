@@ -11,6 +11,10 @@
             </div>
             <button v-on:click="submitCard" type="button">Submit</button>
         </form>
+        <ul v-for="(item, index) in cards" v-bind:key="index + 'itemCard'">
+            <li><b>Name: </b>{{item.user}}</li>
+            <li><b>Message: </b>{{item.message}}</li>
+        </ul>
         <div>
             <h3>temps card</h3>
             <p>
@@ -20,8 +24,6 @@
                 <b>User Message</b> {{userMessage}}
             </p>
         </div>
-        <input class="form-control" type="text" placeholder="Your name" v-model="txtName" />
-        <h3 class="result">{{ result }}</h3>
     </div>
 </template>
 
@@ -32,57 +34,34 @@ import { client } from '../shared';
 import { Hello } from '../dtos';
 import * as signalR from '@aspnet/signalr';
 
-const connection: any = new signalR.HubConnectionBuilder()
-.withUrl('../boardHub')
-.build();
-
 @Component
 export default class HomeComponent extends Vue {
-    @Prop()
-    public name: string;
-    public txtName: string = this.name;
-    public result: string = '';
     public userName: string = '';
     public userMessage: string = '';
-    public cards: object = {};
+    public connection: any = null;
+    public cards: any[] = [];
 
-    public activated() {
-        this.nameChanged(this.name);
+    public created() {
+        this.connection = new signalR.HubConnectionBuilder()
+        .withUrl('../boardHub')
+        .build();
     }
 
-    @Watch('txtName')
-    public onNameChanged(value: string, oldValue: string) {
-        this.nameChanged(value);
-    }
+    public mounted(){
+        this.connection.start();
 
-    public async nameChanged(name: string) {
-        if (name) {
-            const request = new Hello();
-            request.name = name;
-            const r = await client.get(request);
-            this.result = r.result;
-        } else {
-            this.result = '';
-        }
+        this.connection.on('ReceiveMessage', (user: string, message: string) => {
+            this.cards.push({user, message});
+        });
     }
 
     public submitCard() {
         if(this.userName && this.userMessage) {
-            connection.invoke('SendMessage', this.userName, this.userMessage).catch((err: any) => console.error(err.toSting()));
+            this.connection.invoke('SendMessage', this.userName, this.userMessage).catch((err: any) => console.error(err.toSting()));
+
+            this.userName = '';
+            this.userMessage = '';
         }
     }
-
-    // connection.on('ReceiveMessage', (user, message) => {
-    //     const rec_msg = user + ': ' + message;
-    // });
 }
 </script>
-
-<style lang="scss">
-@import '../app.scss';
-
-.result {
-    margin: 10px;
-    color: darken($navbar-background, 10%);
-}
-</style>

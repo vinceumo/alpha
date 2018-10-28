@@ -14,12 +14,3 @@ export default class View1Component extends Vue {
   public message: string;
 }
 </script>
-
-<style lang="scss">
-@import "../app.scss";
-
-#view1 h3 {
-  color: darken($navbar-background, 10%);
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
-}
-</style>

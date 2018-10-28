@@ -1,4 +1,3 @@
-import './app.scss';
 import 'es6-shim';
 import './styles/global.scss';
 

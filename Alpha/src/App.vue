@@ -23,7 +23,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div>
         <div class="row" style="margin:10px 0">
             <div id="content">
                 <router-view></router-view>

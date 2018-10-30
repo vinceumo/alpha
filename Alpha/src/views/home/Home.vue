@@ -1,6 +1,7 @@
 ﻿<template>
     <div class="form-group">
-        <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+        <MainBoard/>
+        <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
         <form>
             <div>
                 <label for="userName">Your Name</label>
@@ -24,7 +25,7 @@
             <p>
                 <b>User Message</b> {{userMessage}}
             </p>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -36,10 +37,12 @@ import { Hello } from '@/dtos';
 import * as signalR from '@aspnet/signalr';
 
 import HelloWorld from '@/components/HelloWorld.vue';
+import MainBoard from '@/components/MainBoard.vue';
 
 @Component({
   components: {
     HelloWorld,
+    MainBoard
   },
 })
 export default class HomeComponent extends Vue {

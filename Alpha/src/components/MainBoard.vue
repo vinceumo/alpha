@@ -1,13 +1,29 @@
 <template>
+<div>
+  <div v-if="tempCard.isShown">
+    <div>
+      <label for="authorInput">Author</label>
+      <input type="text" name="authorInput" id="authorInput" v-model="tempCard.author">
+    </div>
+    <div>
+      <label for="messageInput">Message</label>
+      <input type="text" name="messageInput" id="messageInput" v-model="tempCard.message">
+    </div>
+    <button v-on:click="submitNewCard">Submit</button>
+  </div>
   <ul class="list-columns">
-    <li class="column" v-for="(n, i) in 10" v-bind:key="i + 'col'">
-      <h2>Column {{ n }}</h2>
-      <button>Add a card</button>
+    <li class="column" v-for="(item, index) in board" v-bind:key="index + 'col'">
+      <h2>{{item.title}}</h2>
+      <button v-on:click="addNewCard(index)">Add a card</button>
       <ul class="list-cards">
-        <li class="card" v-for="(n, i) in 10" v-bind:key="i + 'card'">Card {{ n }}</li>
+        <li class="card" v-for="(itemCard, index) in item.cards" v-bind:key="index + 'card'">
+          {{itemCard.description }}<br>
+          <small>{{itemCard.author}}</small>
+        </li>
       </ul>
     </li>
   </ul>
+</div>
 </template>
 
 <script lang="ts">
@@ -16,8 +32,45 @@ import { Component, Prop } from 'vue-property-decorator';
 
 @Component
 export default class MainBoard extends Vue {
-  @Prop(String) public msg!: string
-}
+  public tempCard: any = {
+    isShown: false as boolean,
+    author: 'Vince' as string,
+    message: '' as string,
+    columnIndex: 0 as number,
+  };
+  public board: any[] = [
+    {
+      title: 'Glad',
+      cards: []
+    },
+    {
+      title: 'Mad',
+      cards: []
+    },
+    {
+      title: 'Sad',
+      cards: []
+    },
+  ];
+
+  public addNewCard(colIndex: number) {
+    this.tempCard.isShown = true;
+    this.tempCard.columnIndex = colIndex;
+  };
+
+  public submitNewCard() {
+    if(this.tempCard.author !== '' && this.tempCard.message !== ''){
+      const colIndex = this.tempCard.columnIndex;
+      const newCard = {
+        author: this.tempCard.author,
+        description: this.tempCard.message
+      }
+      this.board[colIndex].cards.push(newCard);
+      this.tempCard.isShown = false;
+      this.tempCard.message = '';
+    }
+  }
+};
 </script>
 
 
@@ -31,8 +84,14 @@ export default class MainBoard extends Vue {
   .column {
     flex-grow: 1;
     flex-basis: 0;
+    min-width: 300px;
+    max-width: 300px;
     padding: spacer(3);
     max-height: 100%;
+
+    h2 {
+      text-align: center;
+    }
   }
 }
 
@@ -45,7 +104,6 @@ export default class MainBoard extends Vue {
     padding: spacer(2);
     margin-bottom: spacer(1);
     border: 1px solid color(dark);
-    width: 300px;
   }
 }
 </style>

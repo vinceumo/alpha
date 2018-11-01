@@ -108,11 +108,23 @@ export default class MainBoard extends Vue {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  
+
+  > div {
+    min-height: 5rem;
+    display: block;
+
+    > span {
+      min-height: 5rem;
+      display: block;
+    }
+  }
 
   .card {
     padding: spacer(2);
     margin-bottom: spacer(1);
     border: 1px solid color(dark);
+    background-color: color-gray(0);
   }
 }
 </style>

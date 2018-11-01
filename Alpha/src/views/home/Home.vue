@@ -51,27 +51,27 @@ export default class HomeComponent extends Vue {
     public connection: any = null;
     public cards: any[] = [];
 
-    public created() {
-        this.connection = new signalR.HubConnectionBuilder()
-        .withUrl('../boardHub')
-        .build();
-    }
+    // public created() {
+    //     this.connection = new signalR.HubConnectionBuilder()
+    //     .withUrl('../boardHub')
+    //     .build();
+    // }
 
-    public mounted(){
-        this.connection.start();
+    // public mounted(){
+    //     this.connection.start();
 
-        this.connection.on('ReceiveMessage', (user: string, message: string) => {
-            this.cards.push({user, message});
-        });
-    }
+    //     this.connection.on('ReceiveMessage', (user: string, message: string) => {
+    //         this.cards.push({user, message});
+    //     });
+    // }
 
-    public submitCard() {
-        if(this.userName && this.userMessage) {
-            this.connection.invoke('SendMessage', this.userName, this.userMessage).catch((err: any) => console.error(err.toSting()));
+    // public submitCard() {
+    //     if(this.userName && this.userMessage) {
+    //         this.connection.invoke('SendMessage', this.userName, this.userMessage).catch((err: any) => console.error(err.toSting()));
 
-            this.userName = '';
-            this.userMessage = '';
-        }
-    }
+    //         this.userName = '';
+    //         this.userMessage = '';
+    //     }
+    // }
 }
 </script>

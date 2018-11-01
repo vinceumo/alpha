@@ -6,8 +6,8 @@
       <input type="text" name="authorInput" id="authorInput" v-model="tempCard.author">
     </div>
     <div>
-      <label for="messageInput">Message</label>
-      <input type="text" name="messageInput" id="messageInput" v-model="tempCard.message">
+      <label for="descriptionInput">Description</label>
+      <input type="text" name="descriptionInput" id="descriptionInput" v-model="tempCard.description">
     </div>
     <button v-on:click="submitNewCard">Submit</button>
   </div>
@@ -32,6 +32,7 @@
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
+import * as signalR from '@aspnet/signalr';
 
 @Component({
   components: {
@@ -42,7 +43,7 @@ export default class MainBoard extends Vue {
   public tempCard: any = {
     isShown: false as boolean,
     author: 'Vince' as string,
-    message: '' as string,
+    description: '' as string,
     columnIndex: 0 as number,
   };
   public board: any[] = [
@@ -59,6 +60,25 @@ export default class MainBoard extends Vue {
       cards: []
     },
   ];
+  public connection: any = null;
+
+  public created() {
+        this.connection = new signalR.HubConnectionBuilder()
+        .withUrl('../boardHub')
+        .build();
+    }
+
+    public mounted(){
+        this.connection.start();
+
+        this.connection.on('ReceiveMessage', (colIndex: number, author: string, description: string) => {
+          const newCard = {
+            author,
+            description
+          }
+            this.board[colIndex].cards.push(newCard);
+        });
+    }
 
   public addNewCard(colIndex: number) {
     this.tempCard.isShown = true;
@@ -66,15 +86,15 @@ export default class MainBoard extends Vue {
   };
 
   public submitNewCard() {
-    if(this.tempCard.author !== '' && this.tempCard.message !== ''){
+    if(this.tempCard.author !== '' && this.tempCard.description !== ''){
       const colIndex = this.tempCard.columnIndex;
       const newCard = {
         author: this.tempCard.author,
-        description: this.tempCard.message
+        description: this.tempCard.description
       }
-      this.board[colIndex].cards.push(newCard);
+      this.connection.invoke('SendMessage', this.tempCard.columnIndex, this.tempCard.author, this.tempCard.description).catch((err: any) => console.error(err.toSting()));
       this.tempCard.isShown = false;
-      this.tempCard.message = '';
+      this.tempCard.description = '';
     }
   }
 };

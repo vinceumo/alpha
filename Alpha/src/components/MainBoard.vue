@@ -15,16 +15,14 @@
     <li class="column" v-for="(item, index) in board" v-bind:key="index + 'col'">
       <h2>{{item.title}}</h2>
       <button v-on:click="addNewCard(index)">Add a card</button>
-      <ul class="list-cards">
-        <draggable v-model="item.cards" :options="{group:'cards'}">
-          <transition-group>
+      <draggable v-model="item.cards" :options="{group:'cards'}">
+          <transition-group tag="ul" class="list-cards">
             <li class="card" v-for="(itemCard, index) in item.cards" v-bind:key="index + 'card'">
               {{itemCard.description }}<br>
               <small>{{itemCard.author}}</small>
             </li>
           </transition-group>
         </draggable>
-      </ul>
     </li>
   </ul>
 </div>
@@ -89,6 +87,7 @@ export default class MainBoard extends Vue {
   margin: 0;
   padding: 0;
   display: flex;
+  overflow-y: scroll;
 
   .column {
     flex-grow: 1;
@@ -97,10 +96,6 @@ export default class MainBoard extends Vue {
     max-width: 300px;
     padding: spacer(3);
     max-height: 100%;
-
-    h2 {
-      text-align: center;
-    }
   }
 }
 
@@ -108,17 +103,8 @@ export default class MainBoard extends Vue {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  
-
-  > div {
-    min-height: 5rem;
-    display: block;
-
-    > span {
-      min-height: 5rem;
-      display: block;
-    }
-  }
+  min-height: 5rem;
+  display: block;
 
   .card {
     padding: spacer(2);

@@ -16,10 +16,14 @@
       <h2>{{item.title}}</h2>
       <button v-on:click="addNewCard(index)">Add a card</button>
       <ul class="list-cards">
-        <li class="card" v-for="(itemCard, index) in item.cards" v-bind:key="index + 'card'">
-          {{itemCard.description }}<br>
-          <small>{{itemCard.author}}</small>
-        </li>
+        <draggable v-model="item.cards" :options="{group:'cards'}">
+          <transition-group>
+            <li class="card" v-for="(itemCard, index) in item.cards" v-bind:key="index + 'card'">
+              {{itemCard.description }}<br>
+              <small>{{itemCard.author}}</small>
+            </li>
+          </transition-group>
+        </draggable>
       </ul>
     </li>
   </ul>
@@ -29,8 +33,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 
-@Component
+@Component({
+  components: {
+    draggable
+  },
+})
 export default class MainBoard extends Vue {
   public tempCard: any = {
     isShown: false as boolean,

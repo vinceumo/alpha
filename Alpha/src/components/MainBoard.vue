@@ -111,6 +111,17 @@ export default class MainBoard extends Vue {
     margin-bottom: spacer(1);
     border: 1px solid color(dark);
     background-color: color-gray(0);
+
+    &.sortable-chosen {
+      &.sortable-ghost {
+        opacity: 0.1;
+      }
+    }
+    &.sortable-drag {
+      border-color: color(focus);
+      opacity: 1;
+      transform: rotate(5deg);
+    }
   }
 }
 </style>

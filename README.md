@@ -1,26 +1,39 @@
 # Alpha
 
-## Project
+# Run project 
 
-This project use the [NetCore vue-spa template](https://github.com/NetCoreTemplates/vue-spa)
-
-> .NET Core 2.1, Vue CLI 3, TS
-
-### Project setup
-
-From the `Alpha` dir
-
-```bash
-# install dependencies
-$ npm install
-
-# Run project
-$ npm run serve
-$ dotnet run
-
-# Production build
-$ npm run build
-
-# Deployments
-$ npm run publish
 ```
+dotnet run
+```
+
+## Project Setup
+
+From https://medium.com/software-ateliers/asp-net-core-vue-template-with-custom-configuration-using-cli-3-0-8288e18ae80b
+
+```
+cd ClientApp
+npm install
+```
+
+### Compiles and hot-reloads for development (Vue js)
+```
+npm run serve
+```
+
+### Compiles and minifies for production (Vue js)
+```
+npm run build
+```
+
+### Run your tests (Vue js)
+```
+npm run test
+```
+
+### Lints and fixes files (Vue js)
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

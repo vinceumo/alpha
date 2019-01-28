@@ -70,7 +70,11 @@ export default {
   created() {
     this.connection = new signalR.HubConnectionBuilder()
     .withUrl('/boardHub')
+    .configureLogging(signalR.LogLevel.Information)
     .build();
+    this.connection.start().catch(function(err) {
+        return console.error(err);
+      });
   },
   mounted() {
     this.connection.start();

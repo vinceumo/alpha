@@ -1,6 +1,6 @@
 {
-  "name": "alpha",
-  "short_name": "alpha",
+  "name": "client-app",
+  "short_name": "client-app",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

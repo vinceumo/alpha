@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace SignalRBoard
+namespace SignalRBoard.Hubs
 {
   public class BoardHub : Hub
   {

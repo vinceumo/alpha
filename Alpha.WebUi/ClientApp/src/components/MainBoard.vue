@@ -1,36 +1,42 @@
 <template>
-<div>
-  <div v-if="tempCard.isShown">
-    <div>
-      <label for="authorInput">Author</label>
-      <input type="text" name="authorInput" id="authorInput" v-model="tempCard.author">
+  <div>
+    <div v-if="tempCard.isShown">
+      <div>
+        <label for="authorInput">Author</label>
+        <input type="text" name="authorInput" id="authorInput" v-model="tempCard.author">
+      </div>
+      <div>
+        <label for="descriptionInput">Description</label>
+        <input
+          type="text"
+          name="descriptionInput"
+          id="descriptionInput"
+          v-model="tempCard.description"
+        >
+      </div>
+      <button v-on:click="submitNewCard">Submit</button>
     </div>
-    <div>
-      <label for="descriptionInput">Description</label>
-      <input type="text" name="descriptionInput" id="descriptionInput" v-model="tempCard.description">
-    </div>
-    <button v-on:click="submitNewCard">Submit</button>
-  </div>
-  <ul class="list-columns">
-    <li class="column" v-for="(item, index) in board" v-bind:key="index + 'col'">
-      <h2>{{item.title}}</h2>
-      <button v-on:click="addNewCard(index)">Add a card</button>
-      <draggable v-model="item.cards" :options="{group:'cards'}">
+    <ul class="list-columns">
+      <li class="column" v-for="(item, index) in board" v-bind:key="index + 'col'">
+        <h2>{{item.title}}</h2>
+        <button v-on:click="addNewCard(index)">Add a card</button>
+        <draggable v-model="item.cards" :options="{group:'cards'}">
           <transition-group tag="ul" class="list-cards">
             <li class="card" v-for="(itemCard, index) in item.cards" v-bind:key="index + 'card'">
-              {{itemCard.description }}<br>
+              {{itemCard.description }}
+              <br>
               <small>{{itemCard.author}}</small>
             </li>
           </transition-group>
         </draggable>
-    </li>
-  </ul>
-</div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import * as signalR from '@aspnet/signalr';
+import draggable from "vuedraggable";
+import * as signalR from "@aspnet/signalr";
 
 export default {
   name: "MainBoard",
@@ -42,13 +48,13 @@ export default {
       connection: null,
       tempCard: {
         isShown: false,
-        author: 'Vince',
-        description: '',
+        author: "Vince",
+        description: "",
         columnIndex: 0
       },
       board: [
         {
-          title: 'Glad',
+          title: "Glad",
           cards: [
             {
               author: "vince22",
@@ -57,34 +63,35 @@ export default {
           ]
         },
         {
-          title: 'Mad',
+          title: "Mad",
           cards: []
         },
         {
-          title: 'Sad',
+          title: "Sad",
           cards: []
         }
       ]
-    }
+    };
   },
   created() {
     this.connection = new signalR.HubConnectionBuilder()
-    .withUrl('/boardHub')
-    .configureLogging(signalR.LogLevel.Information)
-    .build();
+      .withUrl("/boardHub")
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
     this.connection.start().catch(function(err) {
-        return console.error(err);
-      });
+      return console.error(err);
+    });
   },
   mounted() {
-    this.connection.start();
-    this.connection.on('ReceiveMessage', (colIndex, author, description) => {
+    this.connection.on("ReceiveMessage", (colIndex, author, description) => {
       const newCard = {
         author,
         description
-      }
-        this.board[colIndex].cards.push(newCard);
+      };
+      this.board[colIndex].cards.push(newCard);
     });
+
+    // Connection On close // Loook into message pack
   },
   methods: {
     addNewCard: function(colIndex) {
@@ -92,19 +99,26 @@ export default {
       this.tempCard.columnIndex = colIndex;
     },
     submitNewCard: function() {
-      if(this.tempCard.author && this.tempCard.description){
+      if (this.tempCard.author && this.tempCard.description) {
         const colIndex = this.tempCard.columnIndex;
         const newCard = {
           author: this.tempCard.author,
           description: this.tempCard.description
-        }
-        this.connection.invoke('SendMessage', this.tempCard.columnIndex, this.tempCard.author, this.tempCard.description).catch((err) => console.error(err));
+        };
+        this.connection
+          .invoke(
+            "SendMessage",
+            this.tempCard.columnIndex,
+            this.tempCard.author,
+            this.tempCard.description
+          )
+          .catch(err => console.error(err));
         this.tempCard.isShown = false;
-        this.tempCard.description = '';
+        this.tempCard.description = "";
       }
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss">

@@ -29,19 +29,6 @@ namespace Alpha.WebUi
       {
         configuration.RootPath = "ClientApp/dist";
       });
-
-      //Test
-      // services.AddCors(options =>
-      // {
-      //     options.AddPolicy("CorsPolicy",
-      //         builder => builder
-      //         //.AllowAnyOrigin()
-      //         .AllowAnyMethod()
-      //         .AllowAnyHeader()
-      //         .AllowCredentials()
-      //         .SetIsOriginAllowed((host) => true) //for signalr cors                
-      //             );
-      // });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,19 +56,27 @@ namespace Alpha.WebUi
                   template: "{controller}/{action=Index}/{id?}");
       });
 
-      app.UseSpa(spa =>
-      {
-        spa.Options.SourcePath = "ClientApp";
-
-        if (env.IsDevelopment())
-        {
-          spa.UseVueCli(npmScript: "serve", port: 8080, regex: "Compiled ");
-        }
-      });
+      app.UseWebSockets();
       app.UseSignalR(routes =>
       {
         routes.MapHub<BoardHub>("/boardHub");
       });
+
+      app.UseWhen(
+        context => !context.Request.Path.StartsWithSegments("/boardHub"),
+        appBuilder =>
+        {
+          appBuilder.UseSpa(spa =>
+          {
+            spa.Options.SourcePath = "ClientApp";
+
+            if (env.IsDevelopment())
+            {
+              // run npm process with client app
+              spa.UseVueCli(npmScript: "serve", port: 8080, regex: "Compiled ");
+            }
+          });
+        });
     }
   }
 }
